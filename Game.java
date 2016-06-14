@@ -26,8 +26,7 @@ class Game
     }
     
     /*check whether win*/
-    public void checkWin(int x, int y, int z)
-	{
+    public void checkWin(int x, int y, int z) {
 		if( table[x] == 'X' && table[y] == 'X' && table[z] == 'X' )
 			resultGameFinished = true;
 
@@ -36,8 +35,7 @@ class Game
 	}
 
     /*check all buttons are selected over*/
-    public boolean tableFilledUp() 
-    {
+    public boolean tableFilledUp() {
     	if( numberOfBoxesLeft ==  0 )
     		return true;
     	else
@@ -45,10 +43,8 @@ class Game
     }
 
     /*check whether you can chose this button*/
-    public boolean legalMove(int location, Player player)
-    {
-        if( player == currentPlayer && table[location] == ' ' )
-        {
+    public boolean legalMove(int location, Player player) {
+        if( player == currentPlayer && table[location] == ' ' ) {
         	numberOfBoxesLeft--;
         	table[location] = player.mark;
         	
@@ -60,8 +56,7 @@ class Game
         return false;
     }
 
-    public class Player extends Thread
-    {
+    public class Player extends Thread {
         char mark;
         Player opponent;
         Socket socket;
@@ -69,8 +64,7 @@ class Game
         PrintWriter send;
 
         /*constructor*/
-        public Player(Socket socket, char mark)
-        {
+        public Player(Socket socket, char mark) {
             this.socket = socket;
             this.mark = mark;
             
@@ -89,18 +83,15 @@ class Game
         }
 
         /*set opponent*/
-        public void setOpponent(Player opponent)
-        {
+        public void setOpponent(Player opponent) {
             this.opponent = opponent;
         }
 
-        public void otherPlayerMoved(int location)
-        {
+        public void otherPlayerMoved(int location) {
         	send.println("OPPONENT_MOVED");
         	send.println(location);
         	
-        	if( Winner() )
-        	{
+        	if( Winner() ) {
         		send.println("DEFEAT");
         		if( socket.equals(TicTacToeServer.client1) )
         			TicTacToeServer.Client1L++;
@@ -111,33 +102,26 @@ class Game
         		send.println("TIE");
         }
 
-        public void run()
-        {
+        public void run() {
             try {
-
             	send.println("MESSAGE");
             	send.println("All players connected");
 
                 //tell the first player that it is her turn.
-                if( mark == 'X' )
-                {
+                if( mark == 'X' ) {
                 	send.println("MESSAGE");
                 	send.println("Your move");
                 }
 
-                while( true )
-                {
+                while( true ) {
                     String command = recv.readLine();
-                    if( command.equals("MOVE") )  //player move
-                    {
+                    if( command.equals("MOVE") ) { //player move 
                         int location = Integer.parseInt(recv.readLine());
-                        if( legalMove(location, this) )  //check whether is legal
-                        {
+                        if( legalMove(location, this) ) { //check whether is legal 
                         	send.println("VALID_MOVE");
                         	
                         	/*check whether win*/
-                        	if( Winner() )
-                        	{
+                        	if( Winner() ) {
                         		send.println("VICTORY");
                             	if( socket.equals(TicTacToeServer.client1) )
                         			TicTacToeServer.Client1W++;
@@ -149,8 +133,7 @@ class Game
                         	if( tableFilledUp() )
                         		send.println("TIE");
                         }
-                        else  //move illegal
-                        {
+                        else { //move illegal
                         	send.println("MESSAGE");
                         	send.println("?");
                         }
@@ -164,4 +147,3 @@ class Game
         }
     }
 }
-
