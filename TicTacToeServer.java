@@ -2,8 +2,8 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.locks.*;
 
-public class TicTacToeServer {
-	
+public class TicTacToeServer 
+{	
 	static Socket client1;
 	static Socket client2;
 	static int Client1W = 0, Client1L = 0, Client2W = 0, Client2L = 0;
@@ -11,8 +11,7 @@ public class TicTacToeServer {
 	static Lock lock = new ReentrantLock();
 	static Condition threadCond = lock.newCondition();
 	
-	public static void main(String[] args) throws InterruptedException {
-		
+	public static void main(String[] args) throws InterruptedException {		
 		BufferedReader recvClient1, recvClient2;
 	    PrintWriter sendClient1 = null, sendClient2 = null;
 	    String nameClient1 = null, nameClient2 = null;
@@ -36,12 +35,11 @@ public class TicTacToeServer {
 			nameClient2 = recvClient2.readLine();
 			new ServerThread(client2);
 		} catch (IOException e1) {
+			/*do nothing*/
 		}
         
-        
         try {
-            while( true )
-            {
+            while( true ) {
             	/*send client2 record to client1*/
             	sendClient1.println(nameClient2);
             	sendClient1.println(Client2W);
@@ -60,14 +58,16 @@ public class TicTacToeServer {
     			lock.lock();
     			while( signal != 1 )
     				threadCond.await();
-    			playerX = game.new Player(client1, 'X');
+    			
+				playerX = game.new Player(client1, 'X');
     			lock.unlock();
     			
     			/*if client2 input start, set client2 mark = O*/
     			lock.lock();
     			while( signal != 2 )
     				threadCond.await();
-    			playerO = game.new Player(client2, 'O');
+    			
+				playerO = game.new Player(client2, 'O');
     			lock.unlock();
 
     			/*set each opponent, then client1 go move first*/
@@ -79,15 +79,16 @@ public class TicTacToeServer {
 				playerX.start();
 				playerO.start();
             	
-				while( Thread.activeCount() > 3 ) ;
+				while( Thread.activeCount() > 3 );
+				
 				signal = 0;
             } 
         } finally {
         	try {
 				server.close();
 			} catch (IOException e) {
+				/*do nothing*/
 			}
         }
 	}
-
 }
