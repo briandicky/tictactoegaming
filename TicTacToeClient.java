@@ -5,8 +5,8 @@ import java.net.*;
 import java.util.Scanner; 
 import javax.swing.*; 
 
-public class TicTacToeClient {
-	
+public class TicTacToeClient 
+{	
 	private JFrame frame = new JFrame("Tic Tac Toe");
 	private JPanel boardPanel = new JPanel();
     private JLabel messageLabel = new JLabel("");
@@ -20,8 +20,7 @@ public class TicTacToeClient {
     private char icon;
     private char opponentIcon;
     
-    public TicTacToeClient(Socket socket) throws Exception
-    {
+    public TicTacToeClient(Socket socket) throws Exception {
     	/*set up socket*/
     	this.socket = socket;
     	recv = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -37,24 +36,24 @@ public class TicTacToeClient {
             b[i] = new JButton("");
         
         boardPanel.setLayout(new GridLayout(3, 3));
-        for( int i = 0; i < 9; i++ )
-        {
+		
+        for( int i = 0; i < 9; i++ ) {
         	boardPanel.add(b[i]);
             b[i].setEnabled(true);
         }
     	
         /*if mousePressed button, then talk to server*/
-        for ( int i = 0; i < 9; i++ )
-        {
+        for ( int i = 0; i < 9; i++ ) {
             final int j = i;
-            b[i].addMouseListener(new MouseAdapter(){
-                public void mousePressed(MouseEvent e)
-                {
+			
+            b[i].addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent e) {
                     currentb = b[j];
                     send.println("MOVE");
                     send.println(j);
                 }
             });
+			
             boardPanel.add(b[i]);
         }
 
@@ -65,48 +64,41 @@ public class TicTacToeClient {
     }
     
     /*set all button enabled*/
-    public void setAllEnable()
-    {
+    public void setAllEnable() {
     	for( int i = 0; i < 9; i++ )
             b[i].setEnabled(false);
     }
     
     /*receive response from server*/
-    public void play() throws Exception 
-    {
+    public void play() throws Exception {
         String response;
 
         response = recv.readLine();
-        if( response.equals("WELCOME") )
-        {
+		
+        if( response.equals("WELCOME") ) {
             String mark = recv.readLine();
             
             /*set player mark*/
-            if( mark.equals("O") )
-            {
+            if( mark.equals("O") ) {
             	icon = 'O';
             	opponentIcon = 'X';
             }
-            else
-            {
+            else {
             	icon = 'X';
             	opponentIcon = 'O';
             }
             frame.setTitle("Tic Tac Toe - Player " + mark);
         }
         
-        while( true )
-        {
+        while( true ) {
             response = recv.readLine();
             
-            if( response.equals("VALID_MOVE") )  //if move is legal, set button with your mark
-            {
+            if( response.equals("VALID_MOVE") ) { //if move is legal, set button with your mark.
                 messageLabel.setText("Valid move, please wait");
                 currentb.setText(String.valueOf(icon));
                 currentb.setEnabled(false);
             }
-            else if( response.equals("OPPONENT_MOVED") )  //opponent move
-            {
+            else if( response.equals("OPPONENT_MOVED") ) { //opponent move
                 int locatoin = Integer.parseInt(recv.readLine());
                 
                 b[locatoin].setText(String.valueOf(opponentIcon));
@@ -114,42 +106,37 @@ public class TicTacToeClient {
                 
                 messageLabel.setText("Opponent moved, your turn");
             } 
-            else if( response.equals("VICTORY") )  //win
-            {
+            else if( response.equals("VICTORY") ) { //win
                 messageLabel.setText("You win");
                 setAllEnable();
                 break;
             }
-            else if( response.equals("DEFEAT") )  //lose
-            {
+            else if( response.equals("DEFEAT") ) { //lose
                 messageLabel.setText("You lose");
                 setAllEnable();
                 break;
             }
-            else if( response.equals("TIE") )  //tie
-            {
+            else if( response.equals("TIE") ) { //tied for the game
                 messageLabel.setText("Tie");
                 break;
             }
-            else if( response.equals("MESSAGE") )  //other message
-            {
+            else if( response.equals("MESSAGE") ) { //other message
             	String msg = recv.readLine();
                 messageLabel.setText(msg);
             }
         }
+		
         send.println("QUIT");  //finished game
     }
     
     /*want to play again?*/
-    boolean wantsToPlayAgain()
-    {
+    boolean wantsToPlayAgain() {
         int response = JOptionPane.showConfirmDialog(frame, "Want to play again?", " ", JOptionPane.YES_NO_OPTION);
         frame.dispose();
         return response == JOptionPane.YES_OPTION;
     }
 
 	public static void main(String[] args) throws Exception {
-		
 		Scanner scanner = new Scanner(System.in);
 		
 		/*set up connection*/
@@ -165,19 +152,17 @@ public class TicTacToeClient {
 	    String W = null, L = null;
 	    int check = 0;
 	
-		while( true )
-		{
+		while( true ) {
 			/*receive opponent record*/
-			if( check == 0 )
-			{
+			if( check == 0 ) {
 				name = recv.readLine();
 				W = recv.readLine();
 				L = recv.readLine();
 			}
 			
-			
 			for( int i = 0; i < 16; i++ )
 				System.out.printf("\n");
+			
 			System.out.println("********************************************************************************");
 			System.out.println("                               waiting room                                     ");
 			System.out.println("********************************************************************************");
@@ -186,28 +171,25 @@ public class TicTacToeClient {
 			System.out.println("Command: 1.VS Player  2.VS CPU  3.bye");
 			String command = scanner.next();
 			
-			if( command.equals("1") )  //VS Player
-			{
+			if( command.equals("1") ) { //VS Player
 				send.println("start");
 				
 				TicTacToeClient client = new TicTacToeClient(socket);
 
 				client.play();
-		        if ( !client.wantsToPlayAgain() )
-		        {
+				
+		        if ( !client.wantsToPlayAgain() ) {
 					socket.close();
 					System.exit(0);
 				}
 				check = 0;
 			}
-			else if( command.equals("2") )  //VS CPU
-			{
+			else if( command.equals("2") ) { //compete V.S CPU
 				TicTacToeAI temp = new TicTacToeAI();
 				temp.play();
 				check = 1;
 			}
-			else if( command.equals("3") )  //bye
-			{
+			else if( command.equals("3") ) { //bye
 				send.println("bye");
 				
 				socket.close();
@@ -215,5 +197,4 @@ public class TicTacToeClient {
 			}
 		}
 	}
-
 }
