@@ -6,20 +6,16 @@ public class myAction implements ActionListener {
 	private TicTacToeAI Game;
 
 	/*constructor*/
-    public myAction(TicTacToeAI game) 
-    {
+    public myAction(TicTacToeAI game) {
     	Game = game;
     }
 
-	public void actionPerformed(ActionEvent e) 
-	{
+	public void actionPerformed(ActionEvent e) {
 		Game.numberOfBoxesLeft--;
 		
 		/*player choose one button, then set that button to X*/
-		for( int i = 0; i < 9; i++ )
-		{
-            if( e.getSource().equals(Game.b[i]) )
-            {
+		for( int i = 0; i < 9; i++ ) {
+            if( e.getSource().equals(Game.b[i]) ) {
             	Game.b[i].setText("X");
             	Game.b[i].setEnabled(false);
             	Game.table[i] = 'X';
@@ -28,28 +24,24 @@ public class myAction implements ActionListener {
         }
 		
 		/*check whether win*/
-		if( Game.Winner() )
-		{
+		if( Game.Winner() ) {
 			Game.messageLabel.setText("You win");
 			Game.setAllEnable();
 			return;
 		}
         
 		/*check whether tie*/
-    	if( Game.tableFilledUp() )
-    	{
+    	if( Game.tableFilledUp() ) {
     		Game.messageLabel.setText("Tie");
         	return;
     	}
     	
     	/*AI move*/
     	Random random = new Random();
-    	while( true )
-    	{
-    		
+    	while( true ) {
     		int location = random.nextInt(9);
-    		if( Game.table[location] == ' ' )
-    		{
+    		
+			if( Game.table[location] == ' ' ) {
     			Game.b[location].setText("O");
     			Game.b[location].setEnabled(false);
                 
@@ -62,16 +54,14 @@ public class myAction implements ActionListener {
     	}
     	
     	/*check whether win*/
-    	if( Game.Winner() )
-    	{
+    	if( Game.Winner() ) {
     		Game.messageLabel.setText("AI win");
     		Game.setAllEnable();
     		return;
     	}
     	
     	/*check whether tie*/
-    	if( Game.tableFilledUp() )
-    	{
+    	if( Game.tableFilledUp() ) {
     		Game.messageLabel.setText("Tie");
     		return;
     	}
