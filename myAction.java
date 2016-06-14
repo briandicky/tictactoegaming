@@ -1,8 +1,8 @@
 import java.awt.event.*;
 import java.util.*;
 
-public class myAction implements ActionListener {
-	
+public class myAction implements ActionListener 
+{
 	private TicTacToeAI Game;
 
 	/*constructor*/
