@@ -4,8 +4,8 @@ import java.util.*;
 
 import javax.swing.*;
  
-public class TicTacToeAI {
-	
+public class TicTacToeAI 
+{	
 	private JFrame frame = new JFrame("Tic Tac Toe");
 	private JPanel boardPanel = new JPanel();
 	public JLabel messageLabel = new JLabel("");
@@ -18,8 +18,7 @@ public class TicTacToeAI {
 	private boolean resultGameFinished = false;
 	public int numberOfBoxesLeft = 9;
     
-    public TicTacToeAI()
-    {
+    public TicTacToeAI() {
     	action = new myAction(this);
     	
         /*Layout GUI*/
@@ -35,8 +34,7 @@ public class TicTacToeAI {
     }
     
     /*check whether you can chose this button*/
-    public boolean legalMove(int location)
-    {
+    public boolean legalMove(int location) {
         if( table[location] == ' ' )
         {
         	numberOfBoxesLeft--;
@@ -48,19 +46,15 @@ public class TicTacToeAI {
     }
     
     /*set all button enabled*/
-    public void setAllEnable()
-    {
+    public void setAllEnable() {
     	for( int i = 0; i < 9; i++ )
             b[i].setEnabled(false);
     }
     
     /*test all possible outcomes*/
-    public boolean Winner() 
-    {
-    	for( int i = 0; i <= 6; i++ )
-    	{
-    		if( resultGameFinished == false )
-			{
+    public boolean Winner() {
+    	for( int i = 0; i <= 6; i++ ) {
+    		if( resultGameFinished == false ) {
 				if(i == 0)
 					checkWin(i, i + 4, i + 8);
 				if(i <= 2)
@@ -75,8 +69,7 @@ public class TicTacToeAI {
     }
     
     /*check whether win*/
-    public void checkWin(int x, int y, int z)
-	{
+    public void checkWin(int x, int y, int z) {
 		if( table[x] == 'X' && table[y] == 'X' && table[z] == 'X' )
 			resultGameFinished = true;
 
@@ -85,8 +78,7 @@ public class TicTacToeAI {
 	}
     
     /*check all buttons are selected over*/
-    public boolean tableFilledUp() 
-    {
+    public boolean tableFilledUp() {
     	if( numberOfBoxesLeft ==  0 )
     		return true;
     	else
@@ -94,18 +86,15 @@ public class TicTacToeAI {
     }
 	
     /*want to play again?*/
-	boolean wantsToPlayAgain()
-    {
+	boolean wantsToPlayAgain() {
         int response = JOptionPane.showConfirmDialog(frame, "Want to play again?", " ", JOptionPane.YES_NO_OPTION);
         frame.dispose();
         return response == JOptionPane.YES_OPTION;
     }
     
 	/*start game*/
-    public void play()
-    {
-    	for( int i = 0; i < 9; i++ )
-        {
+    public void play() {
+    	for( int i = 0; i < 9; i++ ) {
         	boardPanel.add(b[i]);
         	b[i].addActionListener(action);
             b[i].setEnabled(true);
@@ -117,10 +106,8 @@ public class TicTacToeAI {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		while(true)
-		{
-			if( resultGameFinished == true )
-			{
+		while(true) {
+			if( resultGameFinished == true ) {
 				if ( !wantsToPlayAgain() )
 					System.exit(0);
 				else
