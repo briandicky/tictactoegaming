@@ -1,4 +1,4 @@
-# tic-tac-toe gaming
+# Tic-Tac-Toe gaming
 It's a tic‐tac‐toe “on‐line” game written by java.
 
 # Server side:
